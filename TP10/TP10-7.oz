@@ -1,5 +1,5 @@
 declare
-
+%NOT WORKING
 fun {NewPortObject Behaviour Init}
   proc {MsgLoop S1 State}
     case S1 
