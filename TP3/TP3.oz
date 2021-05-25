@@ -20,13 +20,15 @@ proc {Sum N ?R}
       local R1 N1 in
         N1 = N-One
         {Sum N1 R1}
-        R = N*N + R1 % Il faut introduire une variable en plus pour faire le carré, et puis une autre pour l'addition
+        local NSquared in
+          NSquared = N*N 
+          R = NSquared + R1
+        end
       end
     end
   end
 end
 {Browse {Sum 4}}
-
 {Browse {Sum1 4}}
 
 
