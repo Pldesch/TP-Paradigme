@@ -6,9 +6,16 @@ dans un langage qui nous est plus familier qu'Oz.
 
 Le code n'est pas très élégant (quoique) mais il est fait ainsi pour bien
 montrer le principe.
+
+J'ai utilisé Python 3.8.5 pour run ce code, il est possible
+que des versions antérieures ne fonctionnent pas à cause du typing.
 """
 from collections import namedtuple
 
+
+"""
+Cette fonction créer un "objet" comme on l'a vu dans les slides du cours
+"""
 def new_stack():
 
 	stack : list[int] = []  # ceci va être notre conteneur
@@ -42,10 +49,15 @@ def new_stack():
 
 
 # Comparaison avec de la bonne vieille OOP
+
 class Stack:
     """
     Classe implémentant exactement la même chose que la fonction ci-dessus
     afin de bien montrer les différences (qui ne sont pas si grandes que ça).
+
+		En fait, cette classe représente un ADT. La classe est elle même le couple
+		wrapper/unwrapper. Si l'on regarde bien, il n'y pas moyen de modifier le contenu
+		de l'objet en étant en dehors de l'objet.
     """
 
     def __init__(self) -> object:
@@ -101,7 +113,7 @@ print(f"Le contenu de la stack est : {stack.show()}")
 print("====================== Ending execution ======================")
 
 	
-print("====================== Starting execution with class ======================")
+print("====================== Starting execution with class (ADT) ======================")
 
 # On crée une stack venant d'une classe
 stack = Stack()
