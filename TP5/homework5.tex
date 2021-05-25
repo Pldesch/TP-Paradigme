@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin = 3cm]{geometry}
+\usepackage{amsfonts}
+
+\title{Devoir 5 : Paradigme}
+\author{Nathan Tihon}
+\date{March 2021}
+
+\begin{document}
+\maketitle
+\section{Propriété de Church-Rosser : Question 6}
+
+\subsection{Première expression : $(\lambda x.\lambda y.x)((\lambda x.x) y)$}
+
+\vspace{0.3cm}
+
+\noindent Simplifions d'abord cette expression en réduisant par la gauche. On a successivement :
+\begin{align*}
+    (\lambda x.\lambda \underline{y}.x)((\lambda x.x) y) \xrightarrow[\alpha]{} &  \underline{(\lambda x. \lambda a.x)((\lambda x.x) y)} \\
+    \xrightarrow[ \beta ]{} & \lambda a.\underline{(\lambda x.x)y} \\
+    \xrightarrow[ \beta ]{} & \lambda a.y
+\end{align*}
+Simplifions maintenant par la droite : 
+\begin{align*}
+    (\lambda x.\lambda y.x)\underline{((\lambda x.x) y)} \xrightarrow[ \beta ]{} & (\lambda x.\underline{\lambda y}.x)y \\
+    \xrightarrow[\alpha]{} & \underline{(\lambda x.\lambda a.x)y} \\
+    \xrightarrow[ \beta ]{}  & \lambda a.y
+\end{align*}
+On remarque que les deux exécutions donnent la même solution.
+
+\vspace{0.5cm}
+
+\subsection{Seconde expression : $(\lambda x. \lambda y. x y) (\lambda z.z) (\lambda w.w)$}
+
+\vspace{0.3cm}
+
+\noindent Simplifions par la gauche. Nous avons successivement :
+\begin{align*}
+    \underline{(\lambda x. \lambda y. x y) (\lambda z.z)} (\lambda w.w) \xrightarrow[\beta]{} & \underline{(\lambda y. (\lambda z. z) y)} (\lambda w.w) \\
+    \xrightarrow[\beta]{} & \underline{(\lambda y. y)(\lambda w.w)} \\
+    \xrightarrow[\beta]{} & (\lambda w.w)
+\end{align*}
+
+\noindent Simplifions maintenant par la droite : 
+\begin{align*}
+    (\lambda x. \lambda y. x y) \underline{(\lambda z.z) (\lambda w.w)} \xrightarrow[\beta]{} & \underline{(\lambda x. \lambda y. x y) (\lambda w.w)} \\
+    \xrightarrow[\beta]{} & (\lambda y.\underline{(\lambda w.w) y)} \\
+    \xrightarrow[\beta]{} & (\lambda y.y)
+\end{align*}
+On remarquera facilement que ces deux expressions sont $\alpha$-équivalentes.
+
+\end{document}
