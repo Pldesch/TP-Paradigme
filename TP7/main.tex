@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Devoir 7 : Paradigmes}
+\author{Nathan Tihon}
+\date{March 2021}
+
+\newcommand{\esp}{\text{ }}
+
+\begin{document}
+
+\section{Calculer \texttt{exp} 2 3 :}
+\noindent Essai avec réduction pure:
+
+\begin{align*}
+    (\lambda m.\lambda n. m n) \esp 2 \esp 3 & \longrightarrow (2\esp 3) \\
+    & \longrightarrow (\lambda f.\lambda x.f(f\esp x))\esp 3 \\
+    & \longrightarrow \lambda x.3(3 \esp x) \\
+    & \longrightarrow \lambda x.3(\lambda f.\lambda a.f(f(f\esp a))\esp x)\\
+    & \longrightarrow \lambda x.3(\lambda a.x(x(x\esp a)))\\
+    & \longrightarrow \lambda x.(\lambda f.\lambda b.f(f(f\esp b)))(\lambda a.x(x(x\esp a)))\\
+    & \longrightarrow \lambda x.\lambda b.(\lambda a.x(x(x\esp a))(\lambda a.x(x(x\esp a))(\lambda a.x(x(x\esp a))\esp b)))\\
+    & \longrightarrow \lambda x.\lambda b.(\lambda a.x(x(x\esp a)))((\lambda a.x(x(x\esp a)))(x(x(x\esp b)))\\
+    & \longrightarrow \lambda x.\lambda b.(\lambda a.x(x(x\esp a)))((x(x(x(x(x(x\esp b))))))\\
+    & \longrightarrow \lambda x.\lambda b.(x(x(x(x(x(x(x(x(x\esp b)))))))))\\
+    & \longrightarrow \lambda f.\lambda x.(f(f(f(f(f(f(f(f(f\esp x)))))))))\\
+\end{align*}
+
+\noindent Essai avec une certaine logique :
+\begin{align*}
+    (\lambda m.\lambda n. m n) \esp 2 \esp 3 & \longrightarrow (2\esp 3) \\
+    & \longrightarrow \lambda x.3(3\esp x) \text{ On applique 2 fois la fonction 3 avec une donnée quelconque $x$} \\
+    & \longrightarrow \lambda x.\lambda a. (3\esp x)((3\esp x)((3\esp x)\esp a)) \text{ De même on applique 3 fois la fonction (3 x) à une donnée $a$}\\
+    & \longrightarrow \lambda x.\lambda a. (3\esp x)((3\esp x)(x(x(x\esp a)))) \text{ On applique 3 fois la fonction $x$ à la donnée $a$} 
+    \\
+    & \longrightarrow  \lambda x.\lambda a. (3\esp x)(x(x(x(x(x(x\esp a)))))) \text{ On applique 3 fois la fonction $x$ à la donnée $x(x(x\esp a))$}\\
+    & \longrightarrow \lambda x.\lambda a.x(x(x(x(x(x(x(x(x\esp a)))))))) \text{ Et on fait de nouveaux de même pour $x(x(x(x(x(x\esp a)))))$}\\
+    & \longrightarrow \lambda f.\lambda x.(f(f(f(f(f(f(f(f(f\esp x)))))))))\\
+\end{align*}
+On remarque par contre que \texttt{exp} 2 3 calcule $3^2$ et non $2^3$, pour effectivement calculer $2^3$, il aurait fallu définir $\texttt{exp} \esp m \esp n := \lambda m.\lambda n. n\esp m$.
+\end{document}

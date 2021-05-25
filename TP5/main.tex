@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\title{TP5 : Lambda calcul}
+\author{Nathan Tihon}
+\date{March 2021}
+
+\begin{document}
+
+\textbf{Disclaimer :} Ce document est la résolution que j'ai faite pendant le TP, je n'ai pas vérifié l'exactitude des réponses et il est donc totalement possible que certaines résolutions soient incorrectes.
+
+\section{Définition formelle du lambda-calcul}
+
+\subsection{Question 1 : Validité d'une expression.}
+\begin{enumerate}
+    \item $\lambda x.xyz $ est une expression valide. En effet on sait que si $m$ est un lambda-terme et $x$ une variable, $\lambda x.m$ est un lambda terme. En supposant ici que $y$ et $z$ soient des lambda termes, cette expression est valide. \\
+    \item $\lambda x.\lambda y$ est une expression valide dans laquelle l'abstraction liée à y ne contient aucunes instructions. \\
+    \item $m$ C'est une expression lambda valide, c'est une variable. \\
+    \item $x\lambda wy.y$ est une expression valide. $x$ est une variable (donc lambda-terme) et $\lambda wy.y$ est une abstraction, avec $w$ comme variable libre, c'est donc également un lambda terme. \\
+    \item $x\lambda$ n'est pas une expression lambda valide. \\
+    \item $\lambda \lambda xz.zx$ n'est pas une expression lambda valide. Il faudrait écrire $\lambda xz.zx$ ou $\lambda x.\lambda z.zx$. \\
+    \item $(mnop)(qrst)vw\lambda xyz.zxy$ est une expression valide. $(mnop)$, $(qrst)$ et $vw$ sont des lambdas termes et $\lambda xyz.zxy$ est une abstraction valide.
+\end{enumerate}
+
+\subsection{Question 2 : Variable libre et liée}
+
+\begin{enumerate}
+    \item $\lambda x.\lambda y.x$, la variable $x$ est liée dans l'abstraction $\lambda x.\lambda y.x$ mais est libre dans l'abstraction $\lambda y.x$. \\
+    \item $\lambda x.\lambda x.x$, ici $x$ est liée à l'abstraction la plus à droite. \\
+    \item $\lambda x.x\lambda y.x$, ceci peut en fait être réécrit comme : $\lambda x_1.x_1 \lambda y.x_2$. On voit clairement dans cette expression que le $x$ est lié à la première abstraction mais libre dans la seconde.\\
+    \item $\lambda x.x\lambda x.x$, le premier x est lié à la première abstraction alors que le second est lié à la seconde abstraction. \\
+    \item $\lambda z.x\lambda y.x$, ici $x$ est libre dans les deux abstractions. \\
+    \item $\lambda z.x\lambda x.x$ ici $x$ est lié dans la seconde abstraction définie et libre dans la première.
+\end{enumerate}
+
+\subsection{Question 3 : $\alpha$-renaming}
+
+La première ligne est $\alpha$-équivalente en effet on peut faire : $$\lambda a.\lambda b.abb \mapsto \lambda a.\lambda c.acc \mapsto \lambda b.\lambda c.bcc \mapsto \lambda b.\lambda a.baa$$
+La seconde ligne n'est pas $\alpha$-équivalente, ce ne sont pas les mêmes abstractions.\\
+La troisième ligne n'est pas $\alpha$-équivalente non plus car il y'a capture de la variable x. \\
+La dernière ligne est $\alpha$-équivalente, on peut en effet faire :
+$$\lambda x.x\lambda y.x \mapsto \lambda e.e\lambda y.e \mapsto \lambda e.e\lambda f.e$$
+
+\subsection{Question 4 : $\beta$-réduction}
+
+\begin{enumerate}
+    \item $(\lambda x.xx)y \mapsto yy$
+    \item $(\lambda x.axxa)y \mapsto ayya$
+    \item $(\lambda x.(\lambda z.zx)q)y \mapsto (\lambda z.zy)q \mapsto qy $
+    \item $(\lambda x.x((\lambda z.zx)(\lambda x.bx)))y \mapsto (\lambda x.x((\lambda x.bx)x))y \mapsto (\lambda x.x(bx))y \mapsto y ( by)$
+    \item $(\lambda m.m)(\lambda n.n)(\lambda c.cc)(\lambda d.d) \mapsto (\lambda m.m)(\lambda n.n)((\lambda d.d)( \lambda d.d)) \mapsto  \lambda d.d$
+\end{enumerate}
+
+\section{Propriété de Church-Rosser}
+
+\subsection{Question 6}
+
+$$(\lambda x.\lambda y.x)((\lambda x.x) y)$$
+
+Simplifions d'abord cette expression en réduisant par la gauche. On a :
+$$(\lambda x.\lambda y.x)((\lambda x.x) y) \mapsto_\alpha (\lambda x. \lambda a.x)((\lambda x.x) y) \mapsto_\beta \lambda a.(\lambda x.x)y \mapsto_\beta \lambda a.y $$
+Simplifions maintenant par la droite : 
+$$(\lambda x.\lambda y.x)((\lambda x.x) y) \mapsto_\beta (\lambda x.\lambda y.x)y \mapsto_\alpha (\lambda x.\lambda a.x)y \mapsto_\beta \lambda a.y$$
+
+\section{Représentation de type de donnée}
+On sait définir les booléens comme des expressions lambda : 
+\begin{enumerate}
+    \item $true := \lambda x.\lambda y.x$, c'est une abstraction à 2 arguments qui renvoie toujours le premier.
+    \item $false := \lambda x.\lambda y.y$, c'est également une abstraction à 2 arguments mais cette fois-ci elle renvoie le second argument.
+\end{enumerate}
+De ça on peut définir les opérateurs logiques, par exemple :
+$$ and := \lambda p.\lambda q.pqp $$
+\subsection{Question 7 : Arithmétique des booléens}
+On a que l'opérateur $not$ renvoie toujours l'inverse. On peut alors le modéliser comme ceci :
+\begin{align*}
+    not & := \text{ if } b \text{ then } false \text{ else } true \\
+        &  := \text{ ifthenelse } b \text{ } false \text{ } true\\
+        & := \lambda b.b \lambda yz.z \lambda yz.y
+\end{align*}
+C'est bien une focntion à un seul argument (il prend un booléen) Si ce booléen est True, renvoie la première abstraction (False) sinon renvoie la seconde (True).
+
+Définissons maintenant l'opérateur $or$
+\begin{align*}
+    or & := \text{ if } b \text{ then } true \text{ else if } c \text{ then } true \text{ else } false \\
+       & := \text{ b True c} \\
+       & := \lambda bc.b \lambda yz.y c
+\end{align*}
+
+On a bien que cette fonction prend 2 arguments (b et c) qui sont deux booléens et rend true si au moins un des deux arguments est true et false sinon.
+
+\end{document}
