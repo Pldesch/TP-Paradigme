@@ -1,8 +1,9 @@
 """
 Author : Tihon N.
 
-Ce fichier à pour but de donner une implémentation d'objets
-dans un langage qui nous est plus familier qu'Oz.
+Ce fichier à pour but de donner une implémentation d'objets fonctionnel
+dans un langage qui nous est plus familier qu'Oz. 
+(Nous en avons déjà vu en Java mais pourquoi pas en Python)
 
 Le code n'est pas très élégant (quoique) mais il est fait ainsi pour bien
 montrer le principe.
@@ -12,6 +13,7 @@ que des versions antérieures ne fonctionnent pas à cause du typing.
 """
 from collections import namedtuple
 from copy import deepcopy
+from typing import Union
 
 
 """
@@ -25,12 +27,12 @@ en laissant l'ancienne inchangée. Si on oublie à un moment de stocker le résu
 de l'exécution dans une variable, c'est comme si rien ne s'était passé. 
 (contrairement aux objets où l'objet s'est "souvenu" de l'exécution)
 """
-def FunctionalStack(stack : "list[int]"):
+def FunctionalStack(stack : "list[int]") -> Union["FunctionalStack", bool, int]:
     # NOTE : Tous les "deepcopy" permettent de ne pas passer par références
     #        mais de passer par valeur à la place, ce n'est probablement pas la 
     #        manière la plus efficace de faire mais c'est explicite au moins.
 
-    def pop():
+    def pop() -> "FunctionalStack":
 		# Petit exception handling psq c'est bien
         if is_empty() :
             next_stack = stack
@@ -46,7 +48,7 @@ def FunctionalStack(stack : "list[int]"):
     def get_size() -> int:
         return len(stack)
 
-    def push(x : int):
+    def push(x : int) -> "FunctionalStack":
         tmp_stack = deepcopy(stack)
         tmp_stack.append(x)
         return FunctionalStack(tmp_stack)
@@ -102,12 +104,12 @@ print("====================== Ending execution ======================")
 # Autre exemple avec des nombres rationnels
 class RationalNumber :
 
-    def __init__(self, num : int, den : int):
+    def __init__(self, num : int, den : int) -> "RationalNumber":
         self._num = num
         self._den = den
 
     @staticmethod
-    def _euclid(n1 : int, n2 : int):
+    def _euclid(n1 : int, n2 : int) -> int:
         while( n2 != 0):
             tmp = n2 
             n2 = n1 % n2 
@@ -116,27 +118,29 @@ class RationalNumber :
         return n1
 
     @property
-    def num(self):
+    def num(self) -> int:
         return self._num 
 
     @property
-    def den(self):
+    def den(self) -> int:
         return self._den
 
-    def __add__(self, other):
+    # Permet d'overwrite la méthode "+"
+    def __add__(self, other) -> "RationalNumber":
         tmp_num = self.num*other.den + self.den*other.num
         tmp_den = self.den*other.den
 
         pgcd = self._euclid(tmp_num, tmp_den)
         return RationalNumber(tmp_num//pgcd, tmp_den//pgcd)
 
-    def __sub__(self, other):
+    # Permet d'override la méthode "-"
+    def __sub__(self, other) -> "RationalNumber":
         tmp_num = self.num*other.den - self.den*other.num
         tmp_den = self.den*other.den
         pgcd = self._euclid(tmp_num, tmp_den)
         return RationalNumber(tmp_num//pgcd, tmp_den//pgcd) 
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.num}/{self.den}" 
 
 
