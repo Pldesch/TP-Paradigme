@@ -20,13 +20,15 @@ proc {Sum N ?R}
       local R1 N1 in
         N1 = N-One
         {Sum N1 R1}
-        R = N*N + R1 % Il faut introduire une variable en plus pour faire le carré, et puis une autre pour l'addition
+        local NSquared in
+          NSquared = N*N 
+          R = NSquared + R1
+        end
       end
     end
   end
 end
 {Browse {Sum 4}}
-
 {Browse {Sum1 4}}
 
 
@@ -88,7 +90,7 @@ L2Trad = '|'(1:1 2:'|'(1:2 2:'|'(1:3 2:nil)))
 
 declare
 L3 = nil
-L3Trad = il % Il n'y a pas de traduction car c'est un atome
+L3Trad = nil % Il n'y a pas de traduction car c'est un atome
 {Browse L3}
 {Browse L3Trad}
 
@@ -105,22 +107,25 @@ proc {Q A}
   {P A+1} 
 end
 
-% Environnement contextuel : E_c(Q) = {P -> p, A -> a} où p est la procédure en mémoire
-% q = {proc {$} {P} end, {P -> p, A -> a}}
+% Environnement contextuel : E_c(Q) = {P -> p} où p est la procédure en mémoire
+% q = {proc {$ A} {P A+1} end, {P -> p, A -> a}}
 
 declare
 proc {P} 
   {Browse A} 
 end
 
-% E_c(P) = {Browse -> browse, A -> a}, p = {proc {$} {P} end, E_c(P)}
+% E_c(P) = {Browse -> browse, A -> a}, 
+% p = {proc {$} {P} end, E_c(P)}
 
 local P Q in
   proc {P A R} 
     R=A+2 
   end
 
-  % E_c(P) = {A -> a, R -> r}
+  % E_c(P) = {}
+  % L'environnement contextuel est vide car toutes les variables utilisées
+  % à l'intérieur de la procédure sont passées en arguments.
 
   local P R in
     fun {Q A}
@@ -128,7 +133,7 @@ local P Q in
       R
     end
 
-    % E_c(Q) = {A -> a, P -> p, R -> r}
+    % E_c(Q) = {P -> p, R -> r}
 
     proc {P A R} 
       R=A-2 
@@ -203,5 +208,3 @@ end
 
 % Second appel de makeadd :
 % (Add = proc {$ Y Z} Z = X + Y end, {X -> 2, Add -> add2})
-
-
