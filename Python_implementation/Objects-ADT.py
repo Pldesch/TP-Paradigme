@@ -11,6 +11,7 @@ J'ai utilisé Python 3.8.5 pour run ce code, il est possible
 que des versions antérieures ne fonctionnent pas à cause du typing.
 """
 from collections import namedtuple
+from typing import Union
 
 
 """
@@ -60,10 +61,10 @@ class Stack:
 		de l'objet en étant en dehors de l'objet.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "Stack":
         self._stack = []
 
-    def pop(self) -> int:
+    def pop(self) -> Union[int, RuntimeError]:
 
 		# Petit exception handling psq c'est bien
         if self.is_empty() :
